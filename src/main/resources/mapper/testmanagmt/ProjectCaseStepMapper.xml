@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fantaike.module.testmanagmt.mapper.ProjectCaseStepMapper">
+    
+    <resultMap type="com.fantaike.module.testmanagmt.entity.ProjectCaseStep" id="BaseResultMap">
+        <id     property="id"       column="step_id"    jdbcType="BIGINT"  />
+        <result property="stepName"        column="step_name"  jdbcType="VARCHAR"      />
+        <result property="caseId"        column="case_id"  jdbcType="BIGINT"      />
+        <result property="order"        column="order"  jdbcType="INTEGER"      />
+        <result property="errorAction"        column="error_action"  jdbcType="VARCHAR"      />
+        <result property="expectedResult"        column="expected_result"  jdbcType="VARCHAR"      />
+    </resultMap>
+    
+    
+<!--    <select id="list" resultMap="BaseResultMap">-->
+<!--        select * from project_case_step-->
+<!--        <where>-->
+<!--            <if test="model.stepName != null">-->
+<!--                AND step_name like concat('%', #{model.stepName, jdbcType=VARCHAR},'%')-->
+<!--            </if>-->
+<!--            <if test="model.caseId != null">-->
+<!--                AND case_id = #{model.caseId, jdbcType=BIGINT}-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </select>-->
+    
+    <select id="queryHttpSteps" resultType="com.fantaike.framework.parser.http.HttpCaseStep">
+        SELECT
+            ps.error_action as errorAction,
+            ps.expected_result as expectedResult,
+            ps.step_name as stepName,
+            hp.url as url,
+            hp.uri_param as uriParam,
+            hp.header_param as headerParam,
+            hp.body_param as bodyParam,
+            hp.content_type as contentType,
+            hp.return_param as returnParam,
+            hp.result_type as resultType,
+            hp.method as method
+        FROM
+            project_case_step ps
+            LEFT JOIN http_param hp ON ps.step_id = hp.step_id
+        where ps.case_id = #{caseId}
+        order by `order` asc
+    </select>
+    
+    <!--<insert id="insert">
+        insert into project_case 
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="model.caseName != null">
+                case_name,
+            </if>
+            <if test="model.projectId != null">
+                project_id,
+            </if>
+            <if test="model.order != null">
+                `order`,
+            </if>
+            <if test="model.caseType != null">
+                case_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="model.caseName != null">
+                #{model.caseName, jdbcType=VARCHAR},
+            </if>
+            <if test="model.projectId != null">
+                #{model.projectId, jdbcType=BIGINT},
+            </if>
+            <if test="model.order != null">
+                #{model.order, jdbcType=INTEGER},
+            </if>
+            <if test="model.caseType != null">
+                #{model.caseType, jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>-->
+</mapper>
