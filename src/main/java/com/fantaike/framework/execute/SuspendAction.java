@@ -30,7 +30,7 @@ public class SuspendAction implements Action, Serializable {
         int code = prevResult.getCode();
         // 非200
         if (code != HttpStatus.OK.value()) {
-            // 记录日志?
+            // 记录日志
             return new Result(code+"", code+"", "HTTP请求执行失败,status="+code);
         }
         

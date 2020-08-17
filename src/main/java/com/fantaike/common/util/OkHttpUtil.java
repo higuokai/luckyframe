@@ -5,6 +5,9 @@ import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.net.ConnectException;
+
 public class OkHttpUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(OkHttpUtil.class);
@@ -29,8 +32,11 @@ public class OkHttpUtil {
             String header = response.header("Content-type");
             result.setMediaType(header.substring(header.lastIndexOf("/")+1, header.lastIndexOf(";")));
             return result;
-        } catch (Exception e) {
-            logger.error("Http请求执行失败", e);
+        } catch (ConnectException e) {
+            logger.error("Http请求连接失败", e);
+            return null;
+        } catch (IOException e2) {
+            logger.error("连接失败");
             return null;
         } finally {
             if (response != null) {

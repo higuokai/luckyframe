@@ -33,7 +33,7 @@ public class HttpCaseParser extends AbstractCaseParser<ProjectCase, ExecutorChai
     public ExecutorChain parse(ProjectCase model) {
         
         // 查询下属HTTP用例步骤
-        List<HttpCaseStep> httpCaseSteps = projectCaseStepMapper.queryHttpSteps(model.getCaseId());
+        List<HttpCaseStep> httpCaseSteps = projectCaseStepMapper.queryHttpSteps(model);
         if (httpCaseSteps == null || httpCaseSteps.isEmpty()) {
             logger.warn("[ {} ]用例步骤为空", model.getCaseName());
             return null;

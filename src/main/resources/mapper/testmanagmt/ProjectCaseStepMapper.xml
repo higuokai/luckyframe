@@ -12,8 +12,7 @@
         <result property="errorAction"        column="error_action"  jdbcType="VARCHAR"      />
         <result property="expectedResult"        column="expected_result"  jdbcType="VARCHAR"      />
     </resultMap>
-    
-    
+
 <!--    <select id="list" resultMap="BaseResultMap">-->
 <!--        select * from project_case_step-->
 <!--        <where>-->
@@ -26,7 +25,8 @@
 <!--        </where>-->
 <!--    </select>-->
     
-    <select id="queryHttpSteps" resultType="com.fantaike.framework.parser.http.HttpCaseStep">
+    <select id="queryHttpSteps" resultType="com.fantaike.framework.parser.http.HttpCaseStep"
+        parameterType="com.fantaike.module.testmanagmt.entity.ProjectCase">
         SELECT
             ps.error_action as errorAction,
             ps.expected_result as expectedResult,
@@ -42,8 +42,41 @@
         FROM
             project_case_step ps
             LEFT JOIN http_param hp ON ps.step_id = hp.step_id
-        where ps.case_id = #{caseId}
+        where ps.case_id = #{model.caseId}
+        <if test="model.order != null">
+            and ps.order <![CDATA[ <= ]]> #{model.order}
+        </if>
         order by `order` asc
+    </select>
+    
+    <select id="queryHttpStepList" parameterType="com.fantaike.framework.parser.http.HttpCaseStep" 
+            resultType="com.fantaike.framework.parser.http.HttpCaseStep">
+            SELECT
+                ps.step_id as stepId,
+                pc.case_name as caseName,
+                ps.`order`,
+                ps.error_action as errorAction,
+                ps.step_name as stepName,
+                ps.expected_result as expectedResult,
+                ps.case_type as contentType,
+                ph.url as url,
+                ph.uri_param as uriParam,
+                ph.header_param as headerParam,
+                ph.body_param as bodyParam,
+                ph.method,
+                ph.content_type as contentType,
+                ph.return_param as returnParam,
+                ph.result_type as resultType,
+                pc.case_id as caseId
+            FROM
+                project_case_step ps
+                LEFT JOIN http_param ph ON ps.step_id = ph.step_id
+                LEFT JOIN project_case pc ON pc.case_id = ps.case_id
+                <where>
+                    <if test="model.caseId != null">
+                        pc.case_id = #{model.caseId}
+                    </if>
+                </where>
     </select>
     
     <!--<insert id="insert">
@@ -77,4 +110,125 @@
             </if>
         </trim>
     </insert>-->
+    <insert id="insert" parameterType="com.fantaike.module.testmanagmt.entity.ProjectCaseStep">
+        insert into project_case_step
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="model.id != null">
+                step_id,
+            </if>
+            <if test="model.caseId != null">
+                case_id,
+            </if>
+            <if test="model.stepName != null and model.stepName != ''">
+                step_name,
+            </if>
+            <if test="model.errorAction != null and model.errorAction != ''">
+                error_action,
+            </if>
+            <if test="model.expectedResult != null and model.expectedResult != ''">
+                expected_result,
+            </if>
+            <if test="model.order != null">
+                `order`,
+            </if>
+        </trim>
+        values
+        <trim suffix=")" prefix="(" suffixOverrides=",">
+            <if test="model.id != null">
+                #{model.id},
+            </if>
+            <if test="model.caseId != null">
+                #{model.caseId},
+            </if>
+            <if test="model.stepName != null and model.stepName != ''">
+                #{model.stepName},
+            </if>
+            <if test="model.errorAction != null and model.errorAction != ''">
+                #{model.errorAction},
+            </if>
+            <if test="model.expectedResult != null and model.expectedResult != ''">
+                #{model.expectedResult},
+            </if>
+            <if test="model.order != null">
+                #{model.order},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertHttpParam" parameterType="com.fantaike.framework.parser.http.HttpCaseStep">
+        insert into http_param
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="model.stepId != null">
+                step_id,
+            </if>
+            <if test="model.url != null">
+                url,
+            </if>
+            <if test="model.headerParam != null and model.headerParam != ''">
+                header_param,
+            </if>
+            <if test="model.bodyParam != null and model.bodyParam != ''">
+                body_param,
+            </if>
+            <if test="model.method != null and model.method != ''">
+                method,
+            </if>
+            <if test="model.contentType != null">
+                content_type,
+            </if>
+            <if test="model.returnParam != null">
+                return_param,
+            </if>
+            <if test="model.resultType != null">
+                result_type,
+            </if>
+        </trim>
+        values
+        <trim suffix=")" prefix="(" suffixOverrides=",">
+            <if test="model.stepId != null">
+                #{model.stepId},
+            </if>
+            <if test="model.url != null">
+                #{model.url},
+            </if>
+            <if test="model.headerParam != null and model.headerParam != ''">
+                #{model.headerParam},
+            </if>
+            <if test="model.bodyParam != null and model.bodyParam != ''">
+                #{model.bodyParam},
+            </if>
+            <if test="model.method != null and model.method != ''">
+                #{model.method},
+            </if>
+            <if test="model.contentType != null">
+                #{model.contentType},
+            </if>
+            <if test="model.returnParam != null">
+                #{model.returnParam},
+            </if>
+            <if test="model.resultType != null">
+                #{model.resultType},
+            </if>
+        </trim>
+    </insert>
+    
+    <delete id="deleteByIds">
+        delete from project_case_step
+        <where>
+            step_id in 
+            <trim suffix=")" prefix="(" suffixOverrides=",">
+                <foreach collection="ids" item="index" separator=",">
+                    #{index}
+                </foreach>
+            </trim>
+        </where>
+    </delete>
+    
+    <select id="selectById" resultMap="BaseResultMap">
+        select * from project_case_step where step_id = ${id}
+    </select>
+    
+    <delete id="deleteStepByCaseId">
+        delete from project_case_step where case_id = #{id}
+    </delete>
 </mapper>

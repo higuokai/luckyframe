@@ -62,7 +62,13 @@ public class HttpExecutor extends Executor implements Serializable {
             }
         }
         logger.info("替换后URL为{}", url.toString());
-        okHttpUtil.setURL(url.toString());
+        try {
+            okHttpUtil.setURL(url.toString());
+        }catch (Exception e) {
+            logger.error("URL格式错误");
+            return new Result(Constant.fail, "URL格式错误", url.toString());
+        }
+        
         
         // header
         // header参数
@@ -93,12 +99,13 @@ public class HttpExecutor extends Executor implements Serializable {
         okHttpUtil.setBody(body, stepTemp.getMethod());
         
         // 开始执行
+        HttpResponse response = null;
         try {
-            HttpResponse response = okHttpUtil.execNewCall();
+            response = okHttpUtil.execNewCall();
             if (response == null) {
                 // 失败
                 logger.error("执行Http失败");
-                return new Result(Constant.fail, stepTemp.getStepName()+":执行HTTP请求失败");
+                return new Result(Constant.fail, stepTemp.getStepName()+"["+url+"]"+":连接失败");
             } else {
                 // 成功,状态码不一定
                 int code = response.getCode();
@@ -124,8 +131,8 @@ public class HttpExecutor extends Executor implements Serializable {
                     }
                 } else {
                     // 封装失败
-                    logger.error("执行Http失败");
-                    return new Result(code+"", "执行HTTP请求失败");
+                    logger.error("执行Http失败,status={}", code);
+                    return new Result(code+"", "["+stepTemp.getStepName()+"]请求失败:"+code, response.getBody());
                 }
             }
             
@@ -136,7 +143,7 @@ public class HttpExecutor extends Executor implements Serializable {
             logger.error("执行Http失败", e);
             return new Result(Constant.fail, "执行HTTP请求失败");
         }
-        return new Result("0000", "执行成功");
+        return new Result("0000", "执行成功", response.getBody());
     }
 
     @Override

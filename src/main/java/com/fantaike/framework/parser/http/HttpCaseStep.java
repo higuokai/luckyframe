@@ -1,9 +1,18 @@
 package com.fantaike.framework.parser.http;
 
 import com.fantaike.module.testmanagmt.entity.ProjectCaseStep;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 public class HttpCaseStep extends ProjectCaseStep {
+    private static final long serialVersionUID = 1L;
 
+    private Long caseId;
+    
+    private Long id;
+    @JsonSerialize(using= ToStringSerializer.class)
+    private Long stepId;
+    
     /** uri **/
     private String url;
     /** uri参数 **/
@@ -84,5 +93,32 @@ public class HttpCaseStep extends ProjectCaseStep {
     public void setResultType(String resultType) {
         this.resultType = resultType;
     }
-    
+
+    @Override
+    public Long getCaseId() {
+        return caseId;
+    }
+
+    @Override
+    public void setCaseId(Long caseId) {
+        this.caseId = caseId;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getStepId() {
+        return stepId;
+    }
+
+    public void setStepId(Long stepId) {
+        this.stepId = stepId;
+    }
 }

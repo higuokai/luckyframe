@@ -1,5 +1,7 @@
 package com.fantaike.common.entity;
 
+import com.fantaike.common.constant.Constant;
+
 import java.io.Serializable;
 
 public class Result implements Serializable {
@@ -26,7 +28,7 @@ public class Result implements Serializable {
     }
 
     public Result() {
-        this(null, null, null);
+        this(Constant.success, null, null);
     }
 
     public String getCode() {
@@ -51,5 +53,12 @@ public class Result implements Serializable {
 
     public void setData(Object data) {
         this.data = data;
+    }
+    
+    public static Result success(){
+        return new Result();
+    }
+    public static Result faild() {
+        return new Result(Constant.fail);
     }
 }

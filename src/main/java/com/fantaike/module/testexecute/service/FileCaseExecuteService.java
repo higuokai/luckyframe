@@ -62,5 +62,42 @@ public class FileCaseExecuteService {
             return new Result(Constant.fail, "解析文件失败");
         }
     }
+
+    /**
+     * 执行文件定义的用例步骤
+     * @param inputStream 文件流
+     * @return Result
+     */
+    public Result ddExecute(InputStream inputStream) {
+        // 文件解析为对象
+        ImportParams params = new ImportParams();
+        try {
+            List<HttpCaseStepEntity> stepEntities = ExcelImportUtil.importExcel(inputStream, HttpCaseStepEntity.class, params);
+            if (stepEntities != null && !stepEntities.isEmpty()) {
+                // 只有第一个有地址,复制信息
+                HttpCaseStepEntity httpCaseStepEntity = stepEntities.get(0);
+                String caseName = httpCaseStepEntity.getModule();
+
+                // 组装成step
+                List<HttpCaseStep> steps = new ArrayList<>();
+                for (HttpCaseStepEntity stepEntity : stepEntities) {
+                    HttpCaseStep step = new HttpCaseStep();
+                    step.setBodyParam(httpCaseStepEntity.getBody());
+                    step.setContentType(httpCaseStepEntity.getContentType());
+                    step.setHeaderParam(httpCaseStepEntity.getHeader());
+                    step.setMethod(httpCaseStepEntity.getMethod());
+                    step.setUrl(httpCaseStepEntity.getUrl());
+                    steps.add(step);
+                }
+                // 
+                ExecutorChain chain = httpCaseParser.loadChain(steps, caseName);
+                return chain.doExecute();
+            }
+            return new Result(Constant.fail, "用例为空");
+        } catch (Exception e) {
+            logger.error("解析文件失败", e);
+            return new Result(Constant.fail, "解析文件失败");
+        }
+    }
     
 }

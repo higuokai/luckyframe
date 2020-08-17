@@ -1,6 +1,12 @@
 package com.fantaike.module.testmanagmt.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 项目用例
@@ -21,6 +27,17 @@ public class ProjectCase implements Serializable {
     private Integer loadVersion;
     /** 用例类型 **/
     private String caseType;
+    
+    private String projectName;
+    
+    /** 用例编号 **/
+    private String caseSign;
+    
+    private String remark;
+    
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
 
     public Long getCaseId() {
         return caseId;
@@ -68,6 +85,38 @@ public class ProjectCase implements Serializable {
 
     public void setLoadVersion(Integer loadVersion) {
         this.loadVersion = loadVersion;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getCaseSign() {
+        return caseSign;
+    }
+
+    public void setCaseSign(String caseSign) {
+        this.caseSign = caseSign;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
     
 }

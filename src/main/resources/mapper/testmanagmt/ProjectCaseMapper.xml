@@ -4,12 +4,17 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fantaike.module.testmanagmt.mapper.ProjectCaseMapper">
     <resultMap type="com.fantaike.module.testmanagmt.entity.ProjectCase" id="BaseResultMap">
-        <id     property="caseId"       column="case_id"    jdbcType="BIGINT"  />
+        <id     property="caseId"       column="case_id"    jdbcType="VARCHAR"  />
         <result property="caseName"        column="case_name"  jdbcType="VARCHAR"      />
         <result property="projectId"        column="project_id"  jdbcType="BIGINT"      />
         <result property="order"        column="order"  jdbcType="INTEGER"      />
         <result property="caseType"        column="case_type"  jdbcType="INTEGER"      />
         <result property="loadVersion" column="load_version" jdbcType="INTEGER" />
+        <result property="createTime" column="create_time" jdbcType="DATE" />
+        <result property="projectName" column="project_name" jdbcType="VARCHAR" />
+        <result property="caseSign" column="case_sign" jdbcType="VARCHAR" />
+        <result property="remark" column="remark" jdbcType="VARCHAR" />
+        <result property="projectId" column="project_id" jdbcType="BIGINT" />
     </resultMap>
 
     <select id="selectById" resultMap="BaseResultMap">
@@ -23,4 +28,129 @@
         from project_case_params
         where project_id = #{id}
     </select>
+    
+    <select id="list" resultMap="BaseResultMap" 
+            parameterType="com.fantaike.module.testmanagmt.entity.ProjectCase">
+        SELECT
+            p.`project_name` as project_name,
+            pc.case_name,
+            pc.case_type,
+            pc.`order`,
+            pc.create_time,
+            pc.case_id,
+            pc.case_sign,
+            pc.remark,
+            p.project_id
+        FROM
+            project_case pc
+        LEFT JOIN project p ON pc.project_id = p.project_id
+        <where>
+            <if test="model.caseId != null">
+                AND pc.case_id = #{model.caseId}
+            </if>
+            <if test="model.caseName != null and model.caseName != '' ">
+                AND pc.case_name like concat('%',#{model.caseName},'%')
+            </if>
+            <if test="model.caseSign != null and model.caseSign != ''">
+                AND pc.case_sign = #{model.caseSign}
+            </if>
+            <if test="model.projectId != null">
+                AND pc.project_id = #{model.projectId}
+            </if>
+        </where>
+    </select>
+    
+    <insert id="save" parameterType="com.fantaike.module.testmanagmt.entity.ProjectCase">
+        insert into project_case 
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="model.caseName != null and model.caseName != ''">
+                    case_name,
+                </if>
+                <if test="model.projectId != null">
+                    project_id,
+                </if>
+                <if test="model.caseType != null and model.caseType != ''">
+                    case_type,
+                </if>
+                <if test="model.caseSign != null">
+                    case_sign,
+                </if>
+                <if test="model.remark != null">
+                    remark,
+                </if>
+                <if test="model.createTime != null">
+                    create_time,
+                </if>
+                <if test="model.order != null">
+                    `order`,
+                </if>
+            </trim>
+        values 
+            <trim suffix=")" prefix="(" suffixOverrides=",">
+                <if test="model.caseName != null and model.caseName != ''">
+                    #{model.caseName},
+                </if>
+                <if test="model.projectId != null">
+                    #{model.projectId},
+                </if>
+                <if test="model.caseType != null and model.caseType != ''">
+                    #{model.caseType},
+                </if>
+                <if test="model.caseSign != null">
+                    #{model.caseSign},
+                </if>
+                <if test="model.remark != null">
+                    #{model.remark},
+                </if>
+                <if test="model.createTime != null">
+                    #{model.createTime},
+                </if>
+                <if test="model.order != null">
+                    #{model.order},
+                </if>
+            </trim>
+    </insert>
+    
+    <update id="update" parameterType="com.fantaike.module.testmanagmt.entity.ProjectCase">
+        update project_case set 
+        <trim suffixOverrides=",">
+            <if test="model.caseName != null">
+                case_name = #{model.caseName},
+            </if>
+            <if test="model.projectId != null">
+                project_id = #{model.projectId},
+            </if>
+            <if test="model.caseType != null">
+                case_type = #{model.caseType},
+            </if>
+            <if test="model.remark != null">
+                remark = #{model.remark},
+            </if>
+            <if test="model.caseSign != null">
+                case_sign = #{model.caseSign},
+            </if>
+        </trim>
+        where case_id = #{model.caseId}
+    </update>
+    
+    <update id="updateStatusByIds">
+        update project_case set status = #{status}
+        <where>
+            case_id in
+            <foreach collection="ids" item="index" open="(" close=")" separator=",">
+                #{index}
+            </foreach>
+        </where>
+    </update>
+    
+    <delete id="deleteByIds">
+        delete from project_case
+        <where>
+            case_id in
+            <foreach collection="ids" item="index" open="(" close=")" separator=",">
+                #{index}
+            </foreach>
+        </where>
+    </delete>
+    
 </mapper>

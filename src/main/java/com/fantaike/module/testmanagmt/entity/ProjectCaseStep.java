@@ -1,7 +1,10 @@
 package com.fantaike.module.testmanagmt.entity;
 
-public class ProjectCaseStep {
+import java.io.Serializable;
 
+public class ProjectCaseStep implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     /** id **/
     private Long id;
     /** 用例ID **/
@@ -16,6 +19,8 @@ public class ProjectCaseStep {
     private String expectedResult;
     /** 用例类型 **/
     private String caseType;
+    
+    private String caseName;
 
     public Long getId() {
         return id;
@@ -72,5 +77,12 @@ public class ProjectCaseStep {
     public void setCaseType(String caseType) {
         this.caseType = caseType;
     }
-    
+
+    public String getCaseName() {
+        return caseName;
+    }
+
+    public void setCaseName(String caseName) {
+        this.caseName = caseName;
+    }
 }

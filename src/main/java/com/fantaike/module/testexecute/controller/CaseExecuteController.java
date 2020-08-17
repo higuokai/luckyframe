@@ -55,4 +55,31 @@ public class CaseExecuteController {
         }
     }
     
+    @PostMapping("/caseDataExecuteFromFile")
+    public Result caseDataExecuteFromFile(MultipartRequest request) {
+        logger.info("数据驱动用例文件执行");
+        MultipartFile file = request.getFile("file");
+        if (file == null) {
+            logger.info("文件不存在");
+            return new Result(Constant.fail, "文件不存在");
+        }
+        try {
+            return fileCaseExecuteService.ddExecute(file.getInputStream());
+        } catch (Exception e) {
+            logger.error("获取文件流失败", e);
+            return new Result(Constant.fail, "获取文件流失败");
+        }
+    }
+
+    /**
+     * 单个执行测试用例
+     * @param stepId 步骤ID
+     * @return string
+     */
+    @GetMapping("/executeOne/{stepId}")
+    public Result executeOne(@PathVariable Long stepId) {
+        logger.info("用例执行[{}]", stepId);
+        return caseExecuteService.executeOne(stepId);
+    }
+    
 }

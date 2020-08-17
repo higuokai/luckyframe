@@ -10,4 +10,8 @@ public class Constant {
     public static final String PARSER_CASE_SUFFIX = "CaseParser";
     
     public static final String DEFAULT_VALUE = "";
+    
+    public static final Integer yes = 1;
+
+    public static final Integer no = 0;
 }

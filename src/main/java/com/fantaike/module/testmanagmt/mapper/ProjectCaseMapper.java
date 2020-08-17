@@ -14,4 +14,14 @@ public interface ProjectCaseMapper {
 
     public List<ProjectCaseParam> selectParamByProjectId(@Param("id") Long id);
     
+    public List<ProjectCase> list(@Param("model") ProjectCase model);
+    
+    void save(@Param("model") ProjectCase model);
+    
+    void update(@Param("model") ProjectCase model);
+    
+    void updateStatusByIds(@Param("ids")List<Long> ids, @Param("status") int status);
+    
+    void deleteByIds(@Param("ids")List<Long> ids);
+    
 }
