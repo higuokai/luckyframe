@@ -58,7 +58,6 @@
                 ps.error_action as errorAction,
                 ps.step_name as stepName,
                 ps.expected_result as expectedResult,
-                ps.case_type as contentType,
                 ph.url as url,
                 ph.uri_param as uriParam,
                 ph.header_param as headerParam,

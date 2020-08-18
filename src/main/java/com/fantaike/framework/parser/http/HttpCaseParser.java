@@ -61,6 +61,7 @@ public class HttpCaseParser extends AbstractCaseParser<ProjectCase, ExecutorChai
 
         logger.info("[ {} ]测试用例开始替换参数...", caseName);
         LIFOMap<String , ReturnHolder> returnMap = new LIFOMap<>();
+        LIFOMap<String, String> expressMap = new LIFOMap<>();
         List<ParamSection> sections = new ArrayList<>();
         for (HttpCaseStepTemp stepTemp : lists) {
             logger.info("=====用例步骤[ {} ]开始替换参数=====", stepTemp.getStepName());
@@ -70,6 +71,7 @@ public class HttpCaseParser extends AbstractCaseParser<ProjectCase, ExecutorChai
                 if (returnMap.containsKey(paramSection.getKey())) {
                     logger.info("用例步骤[ {} ]替换参数[ {} ]", stepTemp.getStepName(), paramSection.getKey());
                     paramSection.setReturnHolder(returnMap.get(paramSection.getKey()));
+                    paramSection.setExpress(expressMap.get(paramSection.getKey()));
                 } else {
                     // 没有找到参数
                     sections.add(paramSection);
@@ -82,6 +84,7 @@ public class HttpCaseParser extends AbstractCaseParser<ProjectCase, ExecutorChai
                 for (ReturnSection returnSection : returnSections) {
                     logger.info("用例步骤[ {} ]返回值[ {} ]添加", stepTemp.getStepName(), returnSection.getName());
                     returnMap.put(returnSection.getName(), stepTemp.getReturnHolder());
+                    expressMap.put(returnSection.getName(), returnSection.getExpress());
                 }
             }
 

@@ -85,18 +85,22 @@ public class HttpExecutor extends Executor implements Serializable {
         }
         
         // body, 1.0只有formData和json
-        String contentType = stepTemp.getContentType();
-        String parserName = contentType + "BodyParser";
-        AbstractBodyParser bodyParser = null;
-        RequestBody body = null;
-        try {
-            bodyParser = SpringContextUtil.getBean(parserName, AbstractBodyParser.class);
-            body = stepTemp.getBodyValue(bodyParser);
-        } catch (Exception e) {
-            logger.error("不支持的body解析器:"+parserName, e);
-            body = stepTemp.getBodyValue(null);
+        if ("GET".equals(stepTemp.getMethod())) {
+            okHttpUtil.setBody(null, "GET");
+        } else {
+            String contentType = stepTemp.getContentType();
+            String parserName = contentType.toLowerCase() + "BodyParser";
+            AbstractBodyParser bodyParser = null;
+            RequestBody body = null;
+            try {
+                bodyParser = SpringContextUtil.getBean(parserName, AbstractBodyParser.class);
+                body = stepTemp.getBodyValue(bodyParser);
+            } catch (Exception e) {
+                logger.error("不支持的body解析器:"+parserName, e);
+                body = stepTemp.getBodyValue(null);
+            }
+            okHttpUtil.setBody(body, stepTemp.getMethod());
         }
-        okHttpUtil.setBody(body, stepTemp.getMethod());
         
         // 开始执行
         HttpResponse response = null;

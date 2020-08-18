@@ -22,11 +22,11 @@ public class JsonProxy implements ReturnProxy{
             return jsonObject.toString();
         }
         String[] split = express.split("\\.");
-        Object object = null;
+        Object object = jsonObject;
         for (String s : split) {
             try {
                 // 有就代表还有值,只需要继续替换即可
-                object = ((JSONObject) jsonObject).get(s);
+                object = ((JSONObject) object).get(s);
             } catch (Exception e) {
                 logger.error("取值失败,请查看表达式是否正确,result={}, express={}", jsonObject, express);
             }

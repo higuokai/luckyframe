@@ -83,7 +83,7 @@ public class HttpCaseStepParser extends AbstractCaseParser<HttpCaseStep, HttpCas
             String contentType = model.getContentType();
             logger.info("[ {} ]用例步骤请求体类型为[ {} ]",stepName, contentType);
             // 获取请求体解析类
-            String bodyParserName = contentType + "BodyParser";
+            String bodyParserName = contentType.toLowerCase() + "BodyParser";
             try {
                 AbstractBodyParser<String, Entry<Section, List<ParamSection>>> bodyParser = SpringContextUtil.getBean(bodyParserName, AbstractBodyParser.class);
                 Entry<Section, List<ParamSection>> headerEntry = bodyParser.parse(model.getBodyParam());

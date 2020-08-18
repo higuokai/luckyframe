@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * 表单形式请求体
  */
-@Component("formDataBodyParser")
+@Component("formdataBodyParser")
 public class HttpBodyFromDataParser extends AbstractBodyParser<Section , Entry<Section, List<ParamSection>>> {
     
     private static final Logger logger = LoggerFactory.getLogger(HttpBodyFromDataParser.class);

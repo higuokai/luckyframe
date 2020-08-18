@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component("rawBodyParser")
+@Component("jsonBodyParser")
 public class HttpBodyRawParser extends AbstractBodyParser<Section , Entry<Section, List<ParamSection>>> {
     
     @Override

@@ -71,8 +71,11 @@ public class ProjectCaseStepService {
             
             List<ProjectCaseStep> projectCases = new ArrayList<>();
             List<HttpCaseStep> httpCaseSteps = new ArrayList<>();
+            int index = 1;
             for (HttpCaseStep step : list) {
                 ProjectCaseStep caseStep = new ProjectCaseStep();
+                caseStep.setOrder(index);
+                index++;
                 BeanUtils.copyProperties(step, caseStep);
                 caseStep.setId(idWorker.nextId());
                 caseStep.setCaseId(caseId);

@@ -30,6 +30,9 @@ public class HttpCaseStepEntity implements Serializable {
 
     @Excel(name = "参数类型")
     private String contentType;
+    
+    @Excel(name="预期结果")
+    private String expectResult;
 
     public String getCaseId() {
         return caseId;
@@ -93,5 +96,13 @@ public class HttpCaseStepEntity implements Serializable {
 
     public void setMethod(String method) {
         this.method = method;
+    }
+
+    public String getExpectResult() {
+        return expectResult;
+    }
+
+    public void setExpectResult(String expectResult) {
+        this.expectResult = expectResult;
     }
 }

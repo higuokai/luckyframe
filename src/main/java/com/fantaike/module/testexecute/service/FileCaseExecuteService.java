@@ -82,10 +82,11 @@ public class FileCaseExecuteService {
                 List<HttpCaseStep> steps = new ArrayList<>();
                 for (HttpCaseStepEntity stepEntity : stepEntities) {
                     HttpCaseStep step = new HttpCaseStep();
-                    step.setBodyParam(httpCaseStepEntity.getBody());
+                    step.setBodyParam(stepEntity.getBody());
                     step.setContentType(httpCaseStepEntity.getContentType());
                     step.setHeaderParam(httpCaseStepEntity.getHeader());
                     step.setMethod(httpCaseStepEntity.getMethod());
+                    step.setExpectedResult(httpCaseStepEntity.getExpectResult());
                     step.setUrl(httpCaseStepEntity.getUrl());
                     steps.add(step);
                 }

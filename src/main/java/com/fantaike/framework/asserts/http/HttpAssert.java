@@ -2,16 +2,17 @@ package com.fantaike.framework.asserts.http;
 
 import com.fantaike.common.constant.Constant;
 import com.fantaike.common.entity.Result;
-import com.fantaike.common.util.SpringContextUtil;
 import com.fantaike.framework.asserts.Assert;
 import com.fantaike.framework.lang.HttpResponse;
 import com.fantaike.framework.lang.ReturnHolder;
-import com.fantaike.framework.lang.ReturnProxy;
-import com.fantaike.framework.parser.AbstractBodyParser;
 import okhttp3.Headers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 public class HttpAssert extends Assert<HttpResponse> {
+    
+    private static final Logger logger = LoggerFactory.getLogger(HttpAssert.class);
     
     private ReturnHolder returnHolder; 
     
@@ -92,6 +93,7 @@ public class HttpAssert extends Assert<HttpResponse> {
     
     private boolean assertBody(String body) {
         String proxyValue = returnHolder.getReturnProxy().getValue(express);
+        logger.info("取到的断言值为:{}", proxyValue);
         if (StringUtils.isEmpty(proxyValue)) {
             return false;
         }
@@ -100,6 +102,8 @@ public class HttpAssert extends Assert<HttpResponse> {
             return proxyValue.contains(value);
         } else if ("equals".equals(type.toLowerCase())) {
             return proxyValue.equals(value);
+        } else if ("notnull".equals(type.toLowerCase())) {
+            return !StringUtils.isEmpty(proxyValue);
         }
         return false;
     }
